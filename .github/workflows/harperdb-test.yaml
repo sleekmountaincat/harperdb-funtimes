@@ -9,6 +9,9 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
+      - name: setup docker compose
+        uses: docker/setup-compose-action@v1
+
       - name: start harperdb
         run: docker-compose -f docker/harperdb-ci-compose.yaml up -d
 

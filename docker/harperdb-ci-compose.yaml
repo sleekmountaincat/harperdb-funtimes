@@ -11,6 +11,4 @@ services:
       # we shall "keep it secret, keep it safe"
 #      - HDB_ADMIN_PASSWORD
       - HDB_ADMIN_PASSWORD=test
-#      - LOG_LEVEL=debug
-#      - CUSTOM_ENV=dev
       - NODE_ENV=dev
