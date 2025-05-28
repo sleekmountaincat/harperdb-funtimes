@@ -7,7 +7,7 @@ done
 echo "done!"
 echo
 
-echo "waiting for harperdb application api..."
+echo "waiting for harperdb RESTful api..."
 until nc -zv localhost 9926 > /dev/null 2>&1;
   do sleep .5;
 done
