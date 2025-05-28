@@ -13,7 +13,7 @@ jobs:
         uses: docker/setup-compose-action@v1
 
       - name: start harperdb
-        run: docker-compose -f docker/harperdb-ci-compose.yaml up -d
+        run: docker compose -f docker/harperdb-ci-compose.yaml up -d
 
       - name: wait for harperdb
         run: bash scripts/wait-for-harperdb.sh
