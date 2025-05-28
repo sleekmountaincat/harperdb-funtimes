@@ -4,6 +4,8 @@ services:
     ports:
       - "9925:9925"
       - "9926:9926"
+    volumes:
+      - ../data:/home/harperdb/tmpdata
     environment:
       - HDB_ADMIN_USERNAME=harperdb
       # this is an ephemeral instance running in ci with dummy data,

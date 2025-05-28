@@ -18,3 +18,7 @@ jobs:
       - name: wait for harperdb
         run: bash scripts/wait-for-harperdb.sh
         timeout-minutes: 1
+
+      - name: load test data
+        run: bash scripts/load-data.sh
+        timeout-minutes: 1
