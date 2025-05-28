@@ -25,8 +25,3 @@
     ] | @csv
   ' *.json
 ) > mtg-card-data.csv
-
-# add primary key
-awk 'BEGIN {FS=OFS=","}
-     NR==1 {print "id",$0; next}
-     {print NR-1,$0}' mtg-card-data.csv > mtg_cards.tmp && mv mtg_cards.tmp mtg-card-data.csv
