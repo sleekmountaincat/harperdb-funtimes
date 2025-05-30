@@ -51,12 +51,14 @@ jobs:
           ![Dashboard](data:image/png;base64,$BASE64_IMG)
           
           ## K6 Summaries
-          | Test | Avg (ms) | Requests | Rate (req/s) | Failed % |
-          |------|----------|----------|----------|----------|--------------|----------|
-          | SQL Analytics | $(jq -r '.metrics.http_req_duration.avg' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.count' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.rate' sql-analytics-summary.json) | $(jq -r '.metrics.http_req_failed.rate' sql-analytics-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Search Conditions | $(jq -r '.metrics.http_req_duration.avg' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-conditions-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-conditions-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Search Wildcard | $(jq -r '.metrics.http_req_duration.avg' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-value-wildcard-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Insert | $(jq -r '.metrics.http_req_duration.avg' insert-summary.json) | $(jq -r '.metrics.http_reqs.count' insert-summary.json) | $(jq -r '.metrics.http_reqs.rate' insert-summary.json) | $(jq -r '.metrics.http_req_failed.rate' insert-summary.json | awk '{printf "%.2f", $1*100}') |
+          \`\`\`
+          Test                | Avg (ms)  | Requests | Rate (req/s) | Failed %
+          ------------------- | --------- | -------- | ------------ | --------
+          SQL Analytics       | $(printf "%9.2f" $(jq -r '.metrics.http_req_duration.avg' sql-analytics-summary.json)) | $(printf "%8s" $(jq -r '.metrics.http_reqs.count' sql-analytics-summary.json)) | $(printf "%12.2f" $(jq -r '.metrics.http_reqs.rate' sql-analytics-summary.json)) | $(printf "%8.2f" $(jq -r '.metrics.http_req_failed.rate' sql-analytics-summary.json | awk '{printf "%.2f", $1*100}'))
+          Search Conditions   | $(printf "%9.2f" $(jq -r '.metrics.http_req_duration.avg' search-by-conditions-summary.json)) | $(printf "%8s" $(jq -r '.metrics.http_reqs.count' search-by-conditions-summary.json)) | $(printf "%12.2f" $(jq -r '.metrics.http_reqs.rate' search-by-conditions-summary.json)) | $(printf "%8.2f" $(jq -r '.metrics.http_req_failed.rate' search-by-conditions-summary.json | awk '{printf "%.2f", $1*100}'))
+          Search Wildcard     | $(printf "%9.2f" $(jq -r '.metrics.http_req_duration.avg' search-by-value-wildcard-summary.json)) | $(printf "%8s" $(jq -r '.metrics.http_reqs.count' search-by-value-wildcard-summary.json)) | $(printf "%12.2f" $(jq -r '.metrics.http_reqs.rate' search-by-value-wildcard-summary.json)) | $(printf "%8.2f" $(jq -r '.metrics.http_req_failed.rate' search-by-value-wildcard-summary.json | awk '{printf "%.2f", $1*100}'))
+          Insert              | $(printf "%9.2f" $(jq -r '.metrics.http_req_duration.avg' insert-summary.json)) | $(printf "%8s" $(jq -r '.metrics.http_reqs.count' insert-summary.json)) | $(printf "%12.2f" $(jq -r '.metrics.http_reqs.rate' insert-summary.json)) | $(printf "%8.2f" $(jq -r '.metrics.http_req_failed.rate' insert-summary.json | awk '{printf "%.2f", $1*100}'))
+          \`\`\`
     
           Generated on: $(date)
           EOF
