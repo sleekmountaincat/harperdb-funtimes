@@ -43,12 +43,11 @@ jobs:
 
       - name: build load test summary
         run: |
-          BASE64_IMG=$(base64 -w 0 dashboard.png)
+          IMAGE_URL=$(curl -s -F "file=@dashboard.png" https://0x0.st)
           
           cat >> $GITHUB_STEP_SUMMARY << EOF
           ## Load Test Results
-          
-          ![Dashboard](data:image/png;base64,$BASE64_IMG)
+          ![Dashboard]($IMAGE_URL)
           
           ## K6 Summaries
           \`\`\`
