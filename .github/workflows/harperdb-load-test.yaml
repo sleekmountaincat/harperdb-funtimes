@@ -1,4 +1,4 @@
-name: harperdb-test
+name: harperdb-load-test
 
 on: [workflow_dispatch]
 
