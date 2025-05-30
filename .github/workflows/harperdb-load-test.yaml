@@ -54,7 +54,7 @@ jobs:
           curl -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-10m&to=now&kiosk" --output dashboard.png
 
       - name: upload results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: load-test-results
           path: dashboard.png
