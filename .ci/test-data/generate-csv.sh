@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# generates data (every single 'magic, the gathering' cards) for loading into harper
-# by converting json from https://mtgjson.com/downloads/all-files/ to csv.
-# json files from mtgjson are HUGE, only including a small subset of fields here.
+# generates data (every single 'magic, the gathering' card) for loading into harper by converting
+# json from https://mtgjson.com/downloads/all-files/ to csv. json files from mtgjson are HUGE,
+# i am only including a small subset of fields here.
 # decided not to just use bulk json import to harper as that would require fiddling with AWS keys.
 
 # (this is not used in this demo workflow, but i am including for completeness.)

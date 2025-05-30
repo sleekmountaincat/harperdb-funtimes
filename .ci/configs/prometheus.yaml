@@ -1,3 +1,9 @@
+# prometheus config
+#
+# we scrape our push gateway (houses our roll-your-own docker metrics), and harperdb's prometheus exporter
+# scraping every 1s, just for CI purposes to get higher resolution metrics for our short timeframe
+# note: we need to ignore the self-signed cert
+
 global:
   scrape_interval: 1s
 

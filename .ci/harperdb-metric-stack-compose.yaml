@@ -1,3 +1,5 @@
+# we spin up all the services we need to run our load test and get pretty visualizations
+
 services:
   harperdb:
     image: harperdb/harperdb:latest
@@ -6,14 +8,12 @@ services:
       - "9925:9925"
       - "9926:9926"
     volumes:
+      # make sure we mount our folder with the csv, so bulk load operation can find it
       - ./test-data:/home/harperdb/tmpdata
       - harperdb:/home/harperdb/hdb
     environment:
+      # not sensitive, no need to treat as such
       - HDB_ADMIN_USERNAME=harperdb
-      # this is an ephemeral instance running in ci with dummy data,
-      # no need to treat password sensitively. however, for demo purposes
-      # we shall "keep it secret, keep it safe"
-#      - HDB_ADMIN_PASSWORD
       - HDB_ADMIN_PASSWORD=test
       - NODE_ENV=dev
 
@@ -24,6 +24,7 @@ services:
       - "9090:9090"
     volumes:
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yaml
+    # we want to use remote write so k6 can send load test metrics straight to prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yaml"
       - '--enable-feature=remote-write-receiver'
@@ -35,26 +36,29 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      # this mapping is a bit gross, but decided not to mount a folder matching grafana's expected structure
       - grafana:/var/lib/grafana
       - ./configs/grafana.yaml:/etc/grafana/provisioning/datasources/prometheus.yml
       - ./configs/dashboard-provider.yaml:/etc/grafana/provisioning/dashboards/dashboard.yml
       - ./configs/dashboard.json:/var/lib/grafana/dashboards/dashboard.json
     environment:
+      # in order to get our fancy screenshot of our visualized load test metrics, we need to include an external renderer for grafana
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_RENDERING_SERVER_URL=http://renderer:8081/render
       - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
-
-  pushgateway:
-    container_name: pushgateway
-    image: prom/pushgateway:latest
-    ports:
-      - "9091:9091"
 
   renderer:
     container_name: renderer
     image: grafana/grafana-image-renderer:latest
     ports:
       - "8081:8081"
+
+  # send our custom docker metrics to prometheus via pushgateway
+  pushgateway:
+    container_name: pushgateway
+    image: prom/pushgateway:latest
+    ports:
+      - "9091:9091"
 
 volumes:
   harperdb:

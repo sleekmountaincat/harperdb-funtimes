@@ -1,3 +1,6 @@
+# grafana datasources provisioner config
+# this ensures we have prometheus as a default datasource automatically
+
 apiVersion: 1
 
 datasources:

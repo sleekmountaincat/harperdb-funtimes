@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# run our k6 load tests. we use the prometheus remote write plugin to get our metrics into prometheus so all metrics
+# for our load test can be visualized in grafana
+
 echo "running load tests"
 
 echo "::group::k6 sql-analytics load test"

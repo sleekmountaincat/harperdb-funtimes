@@ -1,3 +1,5 @@
+// load testing harperdb's search by value
+
 import http from 'k6/http';
 import {sleep} from 'k6';
 import encoding from 'k6/encoding';

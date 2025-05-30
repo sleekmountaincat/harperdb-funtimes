@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# this script creates a table, starts a bulk csv import job on harper and waits for it to complete
+# this script creates a database and a table, then starts a bulk csv import job on harper and waits for it to complete.
+# our csv is a list of all 'magic: the gathering' cards, about 105K records
+
 
 # fail on all errors
 set -euo pipefail

@@ -1,3 +1,6 @@
+# grafana dashboard provisioner config
+# this enables us to have our dashboard provisioned automatically
+
 apiVersion: 1
 
 providers:

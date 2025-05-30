@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# initially i was going to use cadvisor to get container level metrics of harperdb during the load test,
+# but i ran into trouble getting it to play nice in github actions. decided rolling my own
+# super simple solution would be a fun exercise. we use pushgateway to send prometheus metrics to,
+# and have prometheus configured to scrape the pushgateway
+
 while true; do
   METRICS=$(docker stats harperdb --no-stream --format "table {{.CPUPerc}}\t{{.MemPerc}}" 2>/dev/null | tail -n 1)
 

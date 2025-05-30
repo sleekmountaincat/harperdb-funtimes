@@ -1,3 +1,6 @@
+// load testing harperdb's sql querying with some analytics
+// thought this test would be interesting due to the docs mentioning harperdb sql performance
+
 import http from 'k6/http';
 import {sleep} from 'k6';
 import encoding from 'k6/encoding';

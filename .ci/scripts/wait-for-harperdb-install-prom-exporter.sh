@@ -26,6 +26,8 @@ echo "done!"
 echo
 
 # install prometheus exporter
+# note: i think there is a bug in the prometheus exporter, as no database level metrics
+# were being reported. i forked the component with a fix
 # (see https://docs.harperdb.io/docs/developers/operations-api/components#deploy-component)
 #################################################################
 echo "installing prometheus exporter and restarting harperdb..."
@@ -52,7 +54,7 @@ else
   echo
 fi
 
-# wait for harperdb again
+# wait for harperdb again after it restarts
 #################################################################
 echo "waiting for harperdb operations api..."
 while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:9925)" != "200" ]]; do
@@ -71,6 +73,7 @@ echo
 # configure prometheus exporter
 #################################################################
 echo "configuring prometheus exporter..."
+# sleeping here because the endpoint occasionally 404's if we go to fast, even if our check above returns a 200
 sleep 5
 RESPONSE=$(curl -s -k -o response.json -w "%{http_code}" \
   -X PUT https://localhost:9926/prometheus_exporter/PrometheusExporterSettings/forceAuthorization \

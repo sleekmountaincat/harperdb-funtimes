@@ -19,6 +19,7 @@ jobs:
         run: docker compose -f .ci/harperdb-metric-stack-compose.yaml up -d
 
       - name: wait for harperdb, install prom exporter
+        # grab start timestamp so we can get a decent guess at appropriate window for grafana dashboard
         run: |
           .ci/scripts/wait-for-harperdb-install-prom-exporter.sh
           echo "START_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
@@ -39,6 +40,10 @@ jobs:
           .ci/scripts/run-load-tests.sh
 
       - name: grab dashboard screenshot
+        # we need to sleep a bit so aggregation can occur.
+        # we then hit grafana API to generate a screenshot of our pretty dashboard with
+        # all of our load test metrics (harperdb internal metrics, k6 load test metrics, and harperdb container metrics).
+        # the range is not an exact science, but we try and cut off some blank space at the start of our visualizations
         run: |
           sleep 60  # Wait longer than the default aggregation period
           let MINS_ELAPSED=($(($(date +%s) - START_TIMESTAMP)) / 60)
@@ -46,6 +51,10 @@ jobs:
           curl -s -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-${RANGE}m&to=now&kiosk" --output dashboard.png
 
       - name: build load test summary
+        # i really wanted to have the dashboard visible in the github actions summary, but alas to do that we
+        # need to host the image somewhere. i found https://0x0.st which is slick, free and needs no account
+        # we also provide a quick summary of the k6 summaries.
+        # together, the grafana visualizations and k6 overview provide a nice, easily digestible story of our load test
         run: |
           IMAGE_URL=$(curl -s -F "file=@dashboard.png" https://0x0.st)
           
@@ -66,6 +75,7 @@ jobs:
           Generated on: $(date)
           EOF
 
+      # grab our visualizations and k6 load test summaries
       - name: upload results
         uses: actions/upload-artifact@v4
         with:
