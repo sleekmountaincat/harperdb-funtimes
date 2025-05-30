@@ -39,7 +39,7 @@ jobs:
 
       - name: grab dashboard screenshot
         run: |
-          curl -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-7m&to=now&kiosk" --output dashboard.png
+          curl -s -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-7m&to=now&kiosk" --output dashboard.png
 
       - name: build load test summary
         run: |
@@ -51,12 +51,12 @@ jobs:
           ![Dashboard](data:image/png;base64,$BASE64_IMG)
           
           ## K6 Summaries
-          | Test | Avg (ms) | P95 (ms) | P99 (ms) | Requests | Rate (req/s) | Failed % |
+          | Test | Avg (ms) | Requests | Rate (req/s) | Failed % |
           |------|----------|----------|----------|----------|--------------|----------|
-          | SQL Analytics | $(jq -r '.metrics.http_req_duration.avg' sql-analytics-summary.json) | $(jq -r '.metrics.http_req_duration.p95' sql-analytics-summary.json) | $(jq -r '.metrics.http_req_duration.p99' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.count' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.rate' sql-analytics-summary.json) | $(jq -r '.metrics.http_req_failed.rate' sql-analytics-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Search Conditions | $(jq -r '.metrics.http_req_duration.avg' search-by-conditions-summary.json) | $(jq -r '.metrics.http_req_duration.p95' search-by-conditions-summary.json) | $(jq -r '.metrics.http_req_duration.p99' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-conditions-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-conditions-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Search Wildcard | $(jq -r '.metrics.http_req_duration.avg' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_req_duration.p95' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_req_duration.p99' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-value-wildcard-summary.json | awk '{printf "%.2f", $1*100}') |
-          | Insert | $(jq -r '.metrics.http_req_duration.avg' insert-summary.json) | $(jq -r '.metrics.http_req_duration.p95' insert-summary.json) | $(jq -r '.metrics.http_req_duration.p99' insert-summary.json) | $(jq -r '.metrics.http_reqs.count' insert-summary.json) | $(jq -r '.metrics.http_reqs.rate' insert-summary.json) | $(jq -r '.metrics.http_req_failed.rate' insert-summary.json | awk '{printf "%.2f", $1*100}') |
+          | SQL Analytics | $(jq -r '.metrics.http_req_duration.avg' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.count' sql-analytics-summary.json) | $(jq -r '.metrics.http_reqs.rate' sql-analytics-summary.json) | $(jq -r '.metrics.http_req_failed.rate' sql-analytics-summary.json | awk '{printf "%.2f", $1*100}') |
+          | Search Conditions | $(jq -r '.metrics.http_req_duration.avg' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-conditions-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-conditions-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-conditions-summary.json | awk '{printf "%.2f", $1*100}') |
+          | Search Wildcard | $(jq -r '.metrics.http_req_duration.avg' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.count' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_reqs.rate' search-by-value-wildcard-summary.json) | $(jq -r '.metrics.http_req_failed.rate' search-by-value-wildcard-summary.json | awk '{printf "%.2f", $1*100}') |
+          | Insert | $(jq -r '.metrics.http_req_duration.avg' insert-summary.json) | $(jq -r '.metrics.http_reqs.count' insert-summary.json) | $(jq -r '.metrics.http_reqs.rate' insert-summary.json) | $(jq -r '.metrics.http_req_failed.rate' insert-summary.json | awk '{printf "%.2f", $1*100}') |
     
           Generated on: $(date)
           EOF
