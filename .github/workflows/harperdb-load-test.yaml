@@ -1,0 +1,60 @@
+name: harperdb-test
+
+on: [workflow_dispatch]
+
+jobs:
+  harperdb-load-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup docker compose
+        uses: docker/setup-compose-action@v1
+
+      - name: setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: start harperdb and metrics stack
+        run: docker compose -f .ci/harperdb-metric-stack-compose.yaml up -d
+
+      - name: wait for harperdb, install prom exporter
+        run: |
+          .ci/scripts/wait-for-harperdb-install-prom-exporter.sh
+        timeout-minutes: 1
+
+      - name: start container monitor
+        run: |
+          .ci/scripts/harperdb-container-monitor.sh &
+        timeout-minutes: 1
+
+      - name: load test data
+        run: |
+          .ci/scripts/load-data.sh
+        timeout-minutes: 1
+
+      - name: run sql-analytics load test
+        run: |
+          k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write --tag testid=sql-analytics .ci/scripts/load-tests/load-test-sql-analytics.js
+
+      - name: run search-by-conditions load test
+        run: |
+          k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write --tag testid=search-by-conditions .ci/scripts/load-tests/load-test-nosql-search-by-conditions.js
+
+      - name: run search-by-value-wildcard load test
+        run: |
+          k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write --tag testid=search-by-value-wildcard .ci/scripts/load-tests/load-test-nosql-search-by-value-wildcard.js
+
+      - name: run insert load test
+        run: |
+          k6 run --out experimental-prometheus-rw=http://localhost:9090/api/v1/write --tag testid=insert .ci/scripts/load-tests/load-test-nosql-insert.js
+
+      - name: grab dashboard screen shot
+        run: |
+          curl -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-10m&to=now&kiosk" --output dashboard.png
+
+      - name: upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: load-test-results
+          path: dashboard.png
