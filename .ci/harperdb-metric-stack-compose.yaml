@@ -24,6 +24,7 @@ services:
       - "9090:9090"
     volumes:
       - ./configs/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - prometheus:/prometheus
     # we want to use remote write so k6 can send load test metrics straight to prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yaml"
@@ -63,3 +64,4 @@ services:
 volumes:
   harperdb:
   grafana:
+  prometheus:
