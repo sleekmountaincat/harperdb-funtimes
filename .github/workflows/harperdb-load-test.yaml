@@ -41,7 +41,8 @@ jobs:
       - name: grab dashboard screenshot
         run: |
           sleep 60  # Wait longer than the default aggregation period
-          let RANGE=($(($(date +%s) - START_TIMESTAMP)) / 60)
+          let MINS_ELAPSED=($(($(date +%s) - START_TIMESTAMP)) / 60)
+          RANGE=$((MINS_ELAPSED + 2))
           curl -s -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-${RANGE}m&to=now&kiosk" --output dashboard.png
 
       - name: build load test summary
