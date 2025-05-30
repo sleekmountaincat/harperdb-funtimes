@@ -21,6 +21,7 @@ jobs:
       - name: wait for harperdb, install prom exporter
         run: |
           .ci/scripts/wait-for-harperdb-install-prom-exporter.sh
+          echo "START_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
         timeout-minutes: 1
 
       - name: start container monitor
@@ -40,7 +41,8 @@ jobs:
       - name: grab dashboard screenshot
         run: |
           sleep 60  # Wait longer than the default aggregation period
-          curl -s -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-7m&to=now&kiosk" --output dashboard.png
+          let RANGE=($(($(date +%s) - START_TIMESTAMP)) / 60)
+          curl -s -u "admin:admin" "http://localhost:3000/render/d/load-test/dashboard?width=1920&height=1200&from=now-${RANGE}m&to=now&kiosk" --output dashboard.png
 
       - name: build load test summary
         run: |
@@ -66,7 +68,7 @@ jobs:
       - name: upload results
         uses: actions/upload-artifact@v4
         with:
-          name: load-test-results
+          name: load-test-results-${{ github.sha }}
           path: |
             *-summary.json
             dashboard.png
