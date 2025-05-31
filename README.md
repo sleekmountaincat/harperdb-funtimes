@@ -14,7 +14,7 @@ Metrics are collected and ingested in a few different ways:
 
 ## Load Tests
 First, we seed the database with about 105K records (all Magic: The Gathering cards). Then, four load test are run, each with 50 virtual concurrent users over 30 seconds. We simulate:
-* inserts
+* Inserts
 * NoSQL search by conditions
 * NoSQL search by value with wildcard
 * SQL analytics
